@@ -1,0 +1,249 @@
+from microbit import *
+microphone.set_threshold(SoundEvent.LOUD, 100)
+microphone.set_threshold(SoundEvent.QUIET, 50)
+
+import music
+import random
+tool = 0
+mode = 1
+steps = 0
+hours = 1
+m1 = 0
+m2 = 0
+cal = 0
+c = 0
+f = 0
+dice = 0
+change = 0
+ap = 'AM'
+tune = ["D3:2"]
+emoji = 1
+move = 0
+while True:
+    c = temperature()
+    f = c * 9 / 5 + 32
+    cal = steps * 0.045
+    if accelerometer.was_gesture('shake'):
+        steps = steps + 1
+
+    if mode == 1:
+        display.show(Image('06660:' '60606:' '66606:' '60006:' '06660'))
+
+        if pin_logo.is_touched():
+            display.scroll(str(hours) + ':' + str(m1) + str(m2) + str(ap))
+            change = 0
+        if pin0.is_touched():
+            change = 1
+        if pin1.is_touched():
+            change = 2
+        if pin2.is_touched():
+            change = 3
+    if mode == 2:
+        if not pin1.is_touched():
+            display.show(Image('00660:' '00666:' '06666:' '66600:' '66000'))
+
+        if pin1.is_touched():
+            display.show(Image('99999:' '99999:' '99999:' '99999:' '99999'))
+    if mode == 3:
+        display.show(Image('06660:' '06660:' '06060:' '66060:' '60066'))
+        if pin1.is_touched():
+            display.scroll(steps)
+        if pin2.is_touched():
+            display.scroll(cal)
+    if mode == 4:
+        display.show(Image('06666:' '06006:' '06006:' '66066:' '66066'))
+        if pin0.is_touched():
+            music.play(music.RINGTONE)
+        if pin1.is_touched():
+            music.play(music.JUMP_UP)
+        if pin2.is_touched():
+            music.play(music.POWER_UP)
+    if mode == 5:
+        display.show(Image('06960:' '06960:' '69996:' '69996:' '69996'))
+        if pin1.is_touched():
+            display.scroll(str(c) + 'C')
+        if pin2.is_touched():
+            display.scroll(str(f) + 'F')
+    if mode == 6:
+        display.show(Image('06660:' '66066:' '66066:' '06660:' '00600'))
+        if pin1.is_touched():
+            music.play(music.WAWAWAWAA)
+          
+    if mode == 7: 
+        if pin_logo.is_touched(): 
+            if microphone.current_event() == SoundEvent.LOUD:
+                display.show(Image.SQUARE) 
+            if microphone.current_event() == SoundEvent.QUIET:
+                display.show(Image.SQUARE_SMALL) 
+
+        else:
+            display.show(Image('06960:'
+                    '09690:'
+                    '06960:'
+                    '66666:'
+                    '06660')) 
+    if mode == 8:
+        if pin1.is_touched(): 
+            dice = random.randint(1, 6)
+        if dice == 0:
+            display.show(Image('99999:'
+                   '90009:'
+                   '90609:'
+                   '90009:'
+                   '99999'))
+        if dice == 1:
+                display.show(Image('99999:'
+                       '90009:'
+                       '90609:'
+                       '90009:'
+                       '99999'))
+        if dice == 2:
+                display.show(Image('99999:'
+                       '90009:'
+                       '96069:'
+                       '90009:'
+                       '99999'))
+        if dice == 3:
+                display.show(Image('99999:'
+                       '90609:'
+                       '90009:'
+                       '96069:'
+                       '99999'))
+        if dice == 4:
+                display.show(Image('99999:'
+                               '96069:'
+                               '90009:'
+                               '96069:'
+                               '99999'))
+        if dice == 5:
+                display.show(Image('99999:'
+                                       '96069:'
+                                       '90609:'
+                                       '96069:'
+                                       '99999'))
+        if dice == 6:
+                display.show(Image('99999:'
+                '96069:'
+                '96069:'
+                '96069:'
+                '99999'))
+    if mode == 9:
+        if emoji == 1:
+            display.show(Image.HAPPY)
+        if pin1.is_touched():
+            emoji = 1
+        if pin2.is_touched():
+            emoji = 2
+        if emoji == 2:
+            display.show(Image.SAD)
+        if pin_logo.is_touched():
+            emoji = 3
+        if emoji == 3:
+            display.show(Image.SURPRISED)
+        
+
+    if mode == 10:
+        if move == 1:
+            if accelerometer.was_gesture('left'):
+                display.show('<')
+            if accelerometer.was_gesture('right'):
+                display.show('>')
+            if accelerometer.was_gesture('face up'): 
+                display.show('^')
+            if accelerometer.was_gesture('face down'): 
+                display.show(Image('00000:'
+                '00000:'
+                '60006:'
+                '06060:'
+                '00600'))
+        if accelerometer.was_gesture('left'):
+            move = 1
+        if accelerometer.was_gesture('right'):
+            move = 1
+        if accelerometer.was_gesture('face up'): 
+            move = 1
+        if accelerometer.was_gesture('face down'): 
+            move = 1
+        if move == 0:
+            display.show(Image('00000:'
+                  '00000:'
+                  '00900:'
+                  '00000:'
+                  '00000'))
+          
+            
+    if change == 0:
+        if button_a.is_pressed():
+            mode = mode - 1
+            music.play(tune)
+            if mode == 0:
+                mode = 10
+
+        if button_b.is_pressed():
+            mode = mode + 1
+            music.play(tune)
+            if mode == 11:
+                mode = 1    
+
+
+
+    if change == 1:
+        if button_a.is_pressed():
+            music.play(tune)
+            hours = hours - 1
+            if hours == 0:
+                hours = 12
+                if ap == 'AM':
+                    ap = 'PM'
+                else:
+                    ap = 'AM'
+            display.scroll(str(hours))
+        if button_b.is_pressed():
+            music.play(tune)
+            hours = hours + 1
+            if hours == 13:
+                hours = 1
+                m1 = 0
+                m2 = 0
+                if ap == 'AM':
+                    ap = 'PM'
+                else:
+                    ap = 'AM'
+            display.scroll(str(hours))
+
+
+
+
+          
+    if change == 2:
+        if button_a.is_pressed():
+            music.play(tune)
+            m1 = m1 - 1
+            if m1 < 0:
+                m1 = 5
+            display.scroll(str(m1))
+        if button_b.is_pressed():
+            music.play(tune)
+            m1 = m1 + 1
+            if m1 == 6:
+                hours = hours + 1
+                m1 = 0
+                m2 = 0
+            display.scroll(str(m1))
+
+
+          
+    if change == 3:
+        if button_a.is_pressed():
+            music.play(tune)
+            m2 = m2 - 1
+            if m2 < 0:
+                m2 = 9
+            display.scroll(str(m2))
+        if button_b.is_pressed():
+            music.play(tune)
+            m2 = m2 + 1
+            if m2 == 10:
+                m1 = m1 + 1
+                m2 = 0
+            display.scroll(str(m2))
